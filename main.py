@@ -1,36 +1,30 @@
-from dataclasses import Field
-import tempfile
-import shutil
 from rdflib import Graph
 
-from pydantic import BaseModel
-from fastapi import FastAPI, Body
+from fastapi import FastAPI
+from fastapi import FastAPI, File, HTTPException
 
 app = FastAPI()
-
-##Models 
-
-# class Ontology(BaseModel):
-#     direction: str = Field(...,
-#                            example= 'archivo.ttl')
-
-g=Graph()
-
-@app.post("/post")
-
-def postOntology(
-    onto = Body(...)
-):
-    g.parse(onto)
-    tempdir = tempfile.mkdtemp(prefix="myapplication-")
-    return g.serialize(format='json-ld')
-    
-@app.get("/read", status_code=201)
-
-def readOntology():
-    return g
+g = Graph()
 
 
+@app.post("/files/")
+async def create_file(file: bytes = File()):
+    try:
+        g.parse(file)
+    except:
+        raise HTTPException(status_code=400, detail="Invalid file")
+    return "ok"
 
 
-
+@app.get(
+    "/",
+    responses={
+        404: {"description": "Item not found"},
+    },
+)
+async def root():
+    some = True
+    if some:
+        return {"msg": "Hello World"}
+    else:
+        raise HTTPException(status_code=404, detail="Item not found")
