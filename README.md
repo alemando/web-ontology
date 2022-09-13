@@ -12,6 +12,24 @@ Please use BLack as formatter when commit, in the future a pipeline this will be
 
 ## Installation
 
+```
+docker compose up --build
+```
+
 ### Backend
+
+## Run tests
+
+Enter bash
+
+```
+docker exec -it web_ontology bash
+```
+
+Run tests
+
+```
+pytest tests
+```
 
 #### FrontEnd
